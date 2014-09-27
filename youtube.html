@@ -1,0 +1,147 @@
+<html>
+<head>
+	<title>youtube get_video_info test</title>
+</head>
+<body>
+	<h3>youtube get_video_info test</h3>
+	<div id="searchBox">
+		<form action="" method="get" id="params">
+			<label>Youtube video ID #</label>
+			<input id="videoID" class="search" type="text" />
+			<input class="submit" type="submit" value="Get Video" />
+			<!--
+<script type="text/javascript" src="js/jquery.mb.YTPlayer.js"></script>
+<script>
+	jQuery(function(){
+		jQuery(".player").mb_YTPlayer();
+	});
+</script>
+<a class="player" data-property="{videoURL:'y0sl4fIxm4E',opacity:1,mute:true,showControls:false,containment:'body',optimizeDisplay:true,loop:true,startAt:0,showYTLogo:false}">Background Video</a>
+
+<!--
+<pre><small>
+space: 1QTLmMSI1FQ
+earth: eV4AyIpnpcI
+earth2: eWRtR3JRgpI
+clouds: 6t0YCU3A0wA
+snow: S7LpYFhb1JU
+underwater: NG1S38s6btk
+bubbles: oBDpZqczlxw
+bluelights: y0sl4fIxm4E
+vector: uVW81kp2HSo
+fireflies: UWF7dZTLW4c
+magiclight: wOouUV1m5Wo
+firestorm: mrMxq8Yq4Pg
+smokey: O_JGNLm16Ts
+cellular: M4X25ax9VDk
+microscope: ZhXsN5hqBNo
+bloodcells: 567Wspw-cmU
+aliendna: eoqi1N9YwKE
+viral: 8vsVG20VUxQ
+clockwork: HCYhRUV2Dbw
+fireplace: dzLDQH1-nzg
+</small></pre>
+-->
+		</form>
+	</div>
+	<div id="ajaxBox">
+	</div>
+	<br>
+	<div id="videoBox">
+	</div>
+	<br/>
+	
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script>
+$(function(){
+	$('#params').submit(function() {
+		var id = this.videoID.value;
+		
+		if(id) {
+			//var url = "http://www.youtube.com/get_video_info?video_id=" + id;
+			var url = "https://gdata.youtube.com/feeds/api/videos/" + id + "?v=2";
+			$.get(url, function(data) {
+				postLinks(data,id);
+			});
+		}
+		
+		// Prevent default form submit action.
+		return false;
+	});
+	
+	function postLinks(data,id){
+		var urls = new Array(); 
+		urls = getLinkArray(data);
+		
+		$("#ajaxBox").empty();
+		for(var x = 0; x < urls.length; x++) {
+			
+			//$("#ajaxBox").append(urls[x]+'<br/><br/>');
+			
+			if(x == 0) {
+				if(urls[0] === "status=fail") {
+					$("#ajaxBox").append(paramFromUrl(urls[urls.length-1],"reason").replace(/\+/g, " ")+'<br/>');
+					break;
+				} else {
+					$("#ajaxBox").append(paramFromUrl(urls[urls.length-1],"title").replace(/\+/g, " ")+'<br/>');
+				}
+			} else {
+				var itag = paramFromUrl(urls[x],"itag");		//fmt == itag
+				var type = paramFromUrl(urls[x],"type") || "undefined";
+				var quality = paramFromUrl(urls[x],"quality");
+				type = type.split(";")[0];
+				if((type === "video/mp4")||(type === "video/webm")) {
+					var tmp = encodeURI(urls[x].replace("sig", "signature"));
+					$("#ajaxBox").append('<a href="'+tmp+'">'+type+' ('+quality+')</a><br/>');
+				}
+			}
+		}
+		
+		addVideoJS();
+	}
+	
+	function addVideoJS() {
+		$('#ajaxBox a').click(function() {
+			var url = this.href;
+			var video = '<video id="video" autoplay preload controls loop src="'+url+'"></video>';
+			$("#video").remove();
+			$("#videoBox").prepend(video);
+			return false;
+		});
+	}
+
+	function paramFromUrl(url, param) {
+		var request = {};
+		var pairs = url.substring(url.indexOf('?') + 1).split('&');
+		for(var i = 0; i < pairs.length; i++) {
+			var pair = pairs[i].split('=');
+			request[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+		}
+		return request[param];
+	}
+	
+	function getLinkArray(data){
+		var adata, urls, tmp, idx;
+		adata = decodeURIComponent(data);
+		adata = decodeURIComponent(adata);
+		adata = decodeURIComponent(adata);
+		adata = adata.replace("=itag=", ",itag=");
+		//tmp = adata.split("&allow_embed=");
+		//tmp = adata.split("&supported_without_ads=");
+		urls = adata.split(/,itag=\d{1,2}&url=/);
+		tmp = urls[urls.length-1];
+		urls[urls.length-1] = urls[urls.length-1].substr(0, urls[urls.length-1].search("&quality=")+18);
+		idx = urls[urls.length-1].lastIndexOf("&");
+		urls[urls.length-1] = urls[urls.length-1].substr(0, idx);
+		urls[urls.length] = "?" + tmp.substr(idx);
+		//urls = tmp[0].split(/,itag=\d{1,2}&url=/);
+		//urls[0] = "&allow_embed=" + tmp[tmp.length-1];
+		//urls[0] = "?supported_without_ads=" + tmp[tmp.length-1];
+		
+  		return urls;
+	}
+});
+</script>
+
+</body>
+</html>

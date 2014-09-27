@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8' />
+		<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+		<meta name="description" content="chpmnrssll.github.com : Russell Chapman" />
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" media="screen" href="css/style.css">
+		<title>chpmnrssll.github.io</title>
+	</head>
+	
+	<body>
+		<!-- HEADER -->
+		<div id="header_wrap" class="outer">
+			<header class="inner">
+				<a id="forkme_banner" href="https://github.com/chpmnrssll">View on GitHub</a>
+				<h1 id="project_title">chpmnrssll.github.io</h1>
+				<h2 id="project_tagline">Add Page</h2>
+			</header>
+		</div>
+		
+		<!-- MAIN CONTENT -->
+		<div id="main_content_wrap" class="outer">
+			<section id="main_content" class="inner">
+				<form id="add_page" target="_self" onsubmit="" action="javascript: postToGoogle()">
+					<fieldset>
+						<label for="URL">URL</label>
+						<input id="URL" type="text" name="URL">
+					</fieldset>
+					<br/>
+					<fieldset>
+						<label for="ID">ID</label>
+						<input id="ID" type="text" name="ID">
+					</fieldset>
+					<br/>
+					<fieldset>
+						<label for="Title">Title</label>
+						<input id="Title" type="text" name="Title">
+					</fieldset>
+					<br/>
+					<fieldset>
+						<label for="Content">Content</label>
+						<textarea id="Content" name="Content"></textarea>
+					</fieldset>
+					<br/>
+					<div style="width: 100%; display: block; float: right;">
+						<button id="send" type="submit">Submit</button>
+					</div>
+					<div style="width: 100%; display: block; float: right; padding-top: 15px;">
+						<div class="requestSubmited" style="display:none; text-align: center;">Your request has been sent!</div>
+					</div>
+				</form>
+			</section>
+		</div>
+		
+		<!-- FOOTER  -->
+		<div id="footer_wrap" class="outer">
+			<footer class="inner">
+				<p>Built by <a href="http://gravatar.com/chpmnrssll">Russell Chapman</a></p>
+			</footer>
+		</div>
+		
+<script type="text/javascript">
+	function postToGoogle() {
+		var ID = $('#ID').val();
+		var title = $('#Title').val();
+		var content = $('#Content').val();
+		var formKey = "16MbujwclYrGre-wTZBcDL9Xy7149_msRZjTK7jGEpvI";
+		
+		if ((ID !== "") && (title !== "") && (content !== "")) {
+			$.ajax({
+				//url: "https://docs.google.com/yourFormURL/formResponse",
+				//url: "https://docs.google.com/16MbujwclYrGre-wTZBcDL9Xy7149_msRZjTK7jGEpvI/formResponse",
+				//url: "https://docs.google.com/a/chpmnrssll.github.io/forms/d/16MbujwclYrGre-wTZBcDL9Xy7149_msRZjTK7jGEpvI/formResponse",
+				//url: "https://docs.google.com/forms/d/16MbujwclYrGre-wTZBcDL9Xy7149_msRZjTK7jGEpvI/formResponse",
+				url: $('#URL').val(),
+				data: { "entry.392635406" : ID, "entry.928818876" : title, "entry.2096318683": content },
+				type: "POST",
+				dataType: "xml",
+				statusCode: {
+					0: function (){
+						$('#ID').val("");
+						$('#Title').val("");
+						$('#Content').val("");
+						alert('Success message 0');
+					}
+				}
+			});
+		} else {
+			alert('Error message');
+		}
+	}
+</script>
+
+	</body>
+</html>
