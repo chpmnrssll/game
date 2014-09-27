@@ -1,5 +1,5 @@
 <?php
-require 'Slim/Slim/Slim.php';
+require 'Slim/Slim.php';
 require 'mongo/crud.php';
 require 'mongo/list.php';
 require 'mongo/command.php';

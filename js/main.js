@@ -41,7 +41,7 @@ require(
 
     window.App = new Marionette.Application();
     //window.App.apiUrl = "http://chpmn-rssll.rhcloud.com/";
-    window.App.apiUrl = "http://localhost/api/";
+    window.App.apiUrl = "http://localhost/game/api/";
     window.App.addInitializer(function (options) {
         require(["routers/main", "routers/auth"], function (MainRouter, AuthRouter) {
             window.App.routers = {
