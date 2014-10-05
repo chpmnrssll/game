@@ -9,17 +9,17 @@ require.config({
     },
     shim : {
         "backbone" : {
-            deps : ["jquery", "underscore"],
+            deps : [ "jquery", "underscore" ],
             exports : "Backbone"
         },
         "bootstrap" : {
-            deps : ["jquery"]
+            deps : [ "jquery" ]
         },
         "jquery" : {
             exports : "$"
         },
         "marionette" : {
-            deps : ["jquery", "underscore", "backbone"],
+            deps : [ "jquery", "underscore", "backbone" ],
             exports : "Marionette"
         },
         "underscore" : {
@@ -29,20 +29,31 @@ require.config({
 });
 
 require(
-    [
-        "backbone",
-        "bootstrap",
-        "jquery",
-        "marionette",
-        "underscore"
-    ],
+    [ "backbone", "bootstrap", "jquery", "marionette", "underscore"],
     function (Backbone, Bootstrap, $, Marionette, _) {
-    "use strict";
-
-    window.App = new Marionette.Application();
-    //window.App.apiUrl = "http://chpmn-rssll.rhcloud.com/";
-    window.App.apiUrl = "http://localhost/game/api/";
-    window.App.addInitializer(function (options) {
+        "use strict";
+        
+        window.App = new Marionette.Application();
+        window.App.addInitializer(function (options) {
+            require([ "routers/mainMenu", "models/gameState" ], function (mainMenuRouter, gameStateModel) {
+                window.App.apiUrl = "http://localhost/game/api/";
+                window.App.gameState = new gameStateModel();
+                
+                window.App.routers = {
+                    mainMenu : new mainMenuRouter()
+                };
+                
+                window.App.addRegions({
+                    content : "#content"
+                });
+                
+                if (Backbone.history) {
+                    Backbone.history.start();
+                }
+            });
+        });
+        
+        /*
         require(["routers/main", "routers/auth"], function (MainRouter, AuthRouter) {
             window.App.routers = {
                 main : new MainRouter(),
@@ -60,7 +71,7 @@ require(
             window.App.navbarView = new NavbarView({ model : window.App.navbarModel })
             window.App.navbar.show(window.App.navbarView);
         });
-
+        
         require(["collections/pages"], function (PagesCollection) {
             window.App.collections = {
                 pages : new PagesCollection()
@@ -74,8 +85,7 @@ require(
                 Backbone.history.start();
             }
         });
-        
-
+        */
         /*
         require(["auth/model", "auth/view" ], function (AuthModel, AuthView) {
 
@@ -90,11 +100,8 @@ require(
             };
 
             window.App.navbar.show(window.App.views.auth);
-            });
-
-            //console.log("window.App.initialize");
+        });
         */
-    });
-
+    
     window.App.start();
 });

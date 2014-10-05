@@ -6,7 +6,7 @@ require 'mongo/command.php';
 
 //define('MONGO_HOST', $_ENV['OPENSHIFT_MONGODB_DB_URL']);
 define('MONGO_HOST', 'mongodb://localhost:27017');
-define('DB', 'api');
+define('DB', 'game');
 
 $app = new Slim();
 $app->response()->header('Content-Type', 'application/json');

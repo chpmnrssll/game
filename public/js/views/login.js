@@ -1,4 +1,4 @@
-define(["text!templates/home.html"], function (Template) {
+define(["text!templates/login.html"], function (Template) {
     "use strict";
 
     return Backbone.Marionette.CompositeView.extend({
