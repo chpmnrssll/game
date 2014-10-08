@@ -36,7 +36,8 @@ require(
         window.App = new Marionette.Application();
         window.App.addInitializer(function (options) {
             require([ "routers/mainMenu", "models/gameState" ], function (mainMenuRouter, gameStateModel) {
-                window.App.apiUrl = "http://localhost/game/api/";
+                //window.App.apiUrl = "http://localhost/game/api/";
+                window.App.apiUrl = "http://localhost/";
                 window.App.gameState = new gameStateModel();
                 
                 window.App.routers = {
