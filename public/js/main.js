@@ -35,10 +35,8 @@ require(
         
         window.App = new Marionette.Application();
         window.App.addInitializer(function (options) {
-            require([ "routers/mainMenu", "models/gameState" ], function (mainMenuRouter, gameStateModel) {
-                //window.App.apiUrl = "http://localhost/game/api/";
+            require([ "routers/mainMenu" ], function (mainMenuRouter) {
                 window.App.apiUrl = "http://localhost/";
-                window.App.gameState = new gameStateModel();
                 
                 window.App.routers = {
                     mainMenu : new mainMenuRouter()
@@ -55,24 +53,6 @@ require(
         });
         
         /*
-        require(["routers/main", "routers/auth"], function (MainRouter, AuthRouter) {
-            window.App.routers = {
-                main : new MainRouter(),
-                auth : new AuthRouter()
-            };
-        });
-        
-        require(["models/navbar","views/navbar"], function (NavbarModel, NavbarView) {
-            window.App.addRegions({
-                navbar : "#navbar",
-                content : "#content"
-            });
-
-            window.App.navbarModel = new NavbarModel();
-            window.App.navbarView = new NavbarView({ model : window.App.navbarModel })
-            window.App.navbar.show(window.App.navbarView);
-        });
-        
         require(["collections/pages"], function (PagesCollection) {
             window.App.collections = {
                 pages : new PagesCollection()
@@ -87,22 +67,5 @@ require(
             }
         });
         */
-        /*
-        require(["auth/model", "auth/view" ], function (AuthModel, AuthView) {
-
-            window.App.models = {
-                auth : new AuthModel()
-            };
-
-            window.App.views = {
-                auth : new AuthView({
-                    model : window.App.models.auth
-                })
-            };
-
-            window.App.navbar.show(window.App.views.auth);
-        });
-        */
-    
     window.App.start();
 });

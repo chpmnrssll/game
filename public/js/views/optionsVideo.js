@@ -1,4 +1,4 @@
-define(["text!templates/manage.html"], function (Template) {
+define(["text!templates/optionsVideo.html"], function (Template) {
     "use strict";
 
     return Backbone.Marionette.CompositeView.extend({

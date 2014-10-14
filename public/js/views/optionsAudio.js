@@ -1,4 +1,4 @@
-define(["text!templates/manage_users.html"], function (Template) {
+define(["text!templates/optionsAudio.html"], function (Template) {
     "use strict";
 
     return Backbone.Marionette.CompositeView.extend({

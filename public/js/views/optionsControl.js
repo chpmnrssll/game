@@ -1,4 +1,4 @@
-define(["text!templates/manage_pages.html"], function (Template) {
+define(["text!templates/optionsControl.html"], function (Template) {
     "use strict";
 
     return Backbone.Marionette.CompositeView.extend({

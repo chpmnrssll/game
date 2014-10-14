@@ -2,34 +2,23 @@ define([], function () {
     "use strict";
     
     return Backbone.Router.extend({
-        routes : {
-            "" : "mainMenu",
-            "mainMenu" : "mainMenu",
-            "play": "mainMenu",
-            "edit" : "mainMenu",
-            "options" : "options",
-            "login" : "login",
-            "*actions" : "error"
+        routes: {
+            "": "loadView",
+            "mainMenu": "loadView",
+            "options": "loadView",
+            "optionsAudio": "loadView",
+            "optionsVideo": "loadView",
+            "optionsControl": "loadView",
+            "login": "loadView",
+            "register": "loadView",
+            "*actions": "error"
         },
-        mainMenu : function () {
-            require(["views/mainMenu"], function (View) {
-                window.App.gameState.set("current", "mainMenu");
+        loadView: function () {
+            require(["views/" + (Backbone.history.fragment || "mainMenu") ], function (View) {
                 window.App.content.show(new View());
             });
         },
-        options : function () {
-            require(["views/options"], function (View) {
-                window.App.gameState.set("current", "options");
-                window.App.content.show(new View());
-            });
-        },
-        login : function () {
-            require(["views/login"], function (View) {
-                window.App.gameState.set("current", "login");
-                window.App.content.show(new View());
-            });
-        },
-        error : function () {
+        error: function () {
             console.log("Route: " + Backbone.history.fragment + " not found");
         }
     });
