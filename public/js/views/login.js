@@ -53,13 +53,13 @@ define(["text!templates/login.html", "models/login"], function (Template, loginM
 					statusCode: {
 						200: function(data) {
                             window.App.routers.mainMenu.navigate("mainMenu", { trigger: true });
-                            console.log(JSON.parse(data.responseText));
+                            //console.log(JSON.parse(data.responseText));
                         },
                         401: function(data) {
                             self.ui.inputUsername.focus();
                             self.ui.formLogin.addClass("has-error");
                             self.ui.alertUnauthorized.removeClass("hidden");
-                            console.log(JSON.parse(data.responseText));
+                            //console.log(JSON.parse(data.responseText));
 						}
 					}
 				});

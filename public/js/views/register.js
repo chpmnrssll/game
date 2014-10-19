@@ -84,14 +84,14 @@ define(["text!templates/register.html"], function (Template) {
                         200: function(data) {
                             self.ui.formRegister.removeClass("has-error");
                             window.App.routers.mainMenu.navigate("login", { trigger: true });
-                            console.log(data.responseText);
+                            //console.log(JSON.parse(data.responseText));
                         },
                         401: function(data) {
                             self.ui.groupUsername.addClass("has-error");
                             self.ui.inputUsername.focus();
                             self.ui.formRegister.addClass("has-error");
                             self.ui.alertError.removeClass("hidden");
-                            console.log(data.responseText);
+                            //console.log(JSON.parse(data.responseText));
                         }
                     }
                 });
