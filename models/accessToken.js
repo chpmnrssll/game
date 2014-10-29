@@ -1,24 +1,33 @@
-var mongoose = require("mongoose");
+var mongoose = require("mongoose"),
+    crypto   = require("crypto");
 
 var AccessTokenSchema = new mongoose.Schema({
-        userId : {
-            type : String,
-            required : true
+        user : {
+            required : true,
+            type : String
         },
-        clientId : {
-            type : String,
-            required : true
+        client : {
+            required : true,
+            type : String
         },
-        token : {
+        value : {
             type : String,
-            unique : true,
-            required : true
+            unique : true
         },
         created : {
-            type : Date,
-        default:
-            Date.now
+            default : Date.now,
+            type : Date
         }
     });
+
+// middleware - overwrite token
+AccessTokenSchema.pre("save", function (next) {
+    this.value = crypto.randomBytes(32).toString("base64");
+    next();
+});
+
+AccessTokenSchema.methods.expired = function () {
+    return Math.round((Date.now() - this.created) / 1000) > config.security.tokenLife;
+}
 
 module.exports = mongoose.model("AccessToken", AccessTokenSchema);

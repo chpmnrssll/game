@@ -1,19 +1,14 @@
 var mongoose = require("mongoose");
 
 var ClientSchema = new mongoose.Schema({
-        name : {
+        version : {
+            required : true,
             type : String,
-            unique : true,
-            required : true
+            unique : true
         },
-        clientId : {
-            type : String,
-            unique : true,
-            required : true
-        },
-        clientSecret : {
-            type : String,
-            required : true
+        secret : {
+            required : true,
+            type : String
         }
     });
 

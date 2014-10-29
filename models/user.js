@@ -2,48 +2,37 @@ var mongoose = require("mongoose"),
     crypto   = require("crypto");
 
 var UserSchema = new mongoose.Schema({
-        username : {
+        name : {
+            lowercase : true,
+            required : true,
             type : String,
-            unique : true,
-            required : true
+            unique : true
         },
-        hashedPassword : {
-            type : String,
-            required : true
+        password : {
+            required : true,
+            set : function (password) {
+                this.salt = crypto.randomBytes(32).toString("base64");
+                return crypto.createHmac("sha1", this.salt).update(password).digest("hex");
+            },
+            type : String
         },
         salt : {
-            type : String,
-            required : true
+            required : true,
+            type : String
         },
         created : {
-            type : Date,
-        default:
-            Date.now
+            default: Date.now,
+            type : Date
         }
     });
 
-UserSchema.virtual("userId").get(function () {
-    return this.id;
-});
-
-UserSchema.virtual("password").get(function () {
-    return this._plainPassword;
-});
-
-UserSchema.virtual("password").set(function (password) {
-    this._plainPassword = password;
-    this.salt = crypto.randomBytes(32).toString("base64");
-    //more secure - this.salt = crypto.randomBytes(128).toString("base64");
-    this.hashedPassword = this.encryptPassword(password);
-});
+UserSchema.methods.checkPassword = function (password) {
+    return this.encryptPassword(password) === this.password;
+}
 
 UserSchema.methods.encryptPassword = function (password) {
+    this.salt = crypto.randomBytes(32).toString("base64");
     return crypto.createHmac("sha1", this.salt).update(password).digest("hex");
-    //more secure - return crypto.pbkdf2Sync(password, this.salt, 10000, 512);
-};
-
-UserSchema.methods.checkPassword = function (password) {
-    return this.encryptPassword(password) === this.hashedPassword;
-};
+}
 
 module.exports = mongoose.model("User", UserSchema);
