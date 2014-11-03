@@ -17,8 +17,7 @@ app.use(compression());                                     // use gzip compress
 app.use(methodOverride());                                  // simulate DELETE and PUT
 app.use(logger("dev"));                                     // log every request to the console
 app.use(passport.initialize());
-
 require("./config/passport");                               // setup passport & strategies
-require("./controllers/routes.js")(app);                    // setup routes
+require("./routes")(app);                                   // setup routes
 app.listen(config.server.port);
 console.log("App started.");

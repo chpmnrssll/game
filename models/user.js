@@ -11,8 +11,8 @@ var UserSchema = new mongoose.Schema({
         password : {
             required : true,
             set : function (password) {
-                this.salt = crypto.randomBytes(32).toString("base64");
-                return crypto.createHmac("sha1", this.salt).update(password).digest("hex");
+                this.generateSalt();
+                return this.encryptPassword(password);
             },
             type : String
         },
@@ -26,13 +26,16 @@ var UserSchema = new mongoose.Schema({
         }
     });
 
-UserSchema.methods.checkPassword = function (password) {
-    return this.encryptPassword(password) === this.password;
+UserSchema.methods.generateSalt = function () {
+    this.salt = crypto.randomBytes(32).toString("base64");
 }
 
 UserSchema.methods.encryptPassword = function (password) {
-    this.salt = crypto.randomBytes(32).toString("base64");
     return crypto.createHmac("sha1", this.salt).update(password).digest("hex");
+}
+
+UserSchema.methods.checkPassword = function (password) {
+    return this.encryptPassword(password) === this.password;
 }
 
 module.exports = mongoose.model("User", UserSchema);

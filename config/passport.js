@@ -1,19 +1,20 @@
-var config                 = require("./config"),
-    passport               = require("passport"),
+var passport               = require("passport"),
     BasicStrategy          = require("passport-http").BasicStrategy,
     BearerStrategy         = require("passport-http-bearer").Strategy,
     ClientPasswordStrategy = require("passport-oauth2-client-password").Strategy,
+    config                 = require("./config"),
     UserModel              = require("../models/user"),
     ClientModel            = require("../models/client"),
     AccessTokenModel       = require("../models/accessToken");
 
-// These strategies are used to authenticate registered OAuth clients.  They are
-// employed to protect the `token` endpoint, which consumers use to obtain
-// access tokens.  The OAuth 2.0 specification suggests that clients use the
-// HTTP Basic scheme to authenticate.  Use of the client password strategy
-// allows clients to send the same credentials in the request body (as opposed
-// to the `Authorization` header).  While this approach is not recommended by
-// the specification, in practice it is quite common.
+// The clientBasic strategy allows clients to use the HTTP Basic scheme to send credentials.
+// Authorization header : {
+//  username : client.id,
+//  password : client.secret }
+// Request body : {
+//  grant_type : "password",
+//  username   : user.name,
+//  password   : user.password }
 passport.use("clientBasic", new BasicStrategy(function (clientId, clientSecret, done) {
         ClientModel.findById(clientId, function (err, client) {
             if (err) {
@@ -26,6 +27,13 @@ passport.use("clientBasic", new BasicStrategy(function (clientId, clientSecret, 
         });
     }));
 
+// The clientPassword strategy allows clients to send the credentials in the request body.
+// Request body : {
+//  grant_type    : "password",
+//  username      : user.name,
+//  password      : user.password 
+//  client_id     : client.id,
+//  client_secret : client.secret }
 passport.use("clientPassword", new ClientPasswordStrategy(function (clientId, clientSecret, done) {
         ClientModel.findById(clientId, function (err, client) {
             if (err) {
@@ -38,9 +46,8 @@ passport.use("clientPassword", new ClientPasswordStrategy(function (clientId, cl
         });
     }));
 
-// This strategy is used to authenticate either users or clients based on an access token
-// (aka a bearer token).  If a user, they must have previously authorized a client,
-// which is issued an access token to make requests on behalf of the authorizing user.
+// This accessToken strategy allows clients to authenticate requests based on an access token.
+// Authorization header : { "Bearer" : token.value }
 passport.use("accessToken", new BearerStrategy(function (accessToken, done) {
         AccessTokenModel.findOne({
             value : accessToken
@@ -52,7 +59,6 @@ passport.use("accessToken", new BearerStrategy(function (accessToken, done) {
                 return done(null, false);
             }
             if (token.expired()) {
-            //if (Math.round((Date.now() - token.created) / 1000) > config.security.tokenLife) {
                 AccessTokenModel.remove({
                     value : accessToken
                 }, function (err) {
@@ -60,12 +66,10 @@ passport.use("accessToken", new BearerStrategy(function (accessToken, done) {
                         return done(err);
                     }
                 });
-
                 return done(null, false, {
                     message : "Token expired"
                 });
             }
-
             UserModel.findById(token.user, function (err, user) {
                 if (err) {
                     return done(err);
@@ -75,10 +79,11 @@ passport.use("accessToken", new BearerStrategy(function (accessToken, done) {
                         message : "Unknown user"
                     });
                 }
-
                 var info = {
                     scope : "*"
                 };
+                // req.authInfo is set using the `info` argument. It is typically used to
+                // indicate scope of the token, and used in access control checks.
                 done(null, user, info);
             });
         });

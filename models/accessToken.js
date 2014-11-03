@@ -1,5 +1,6 @@
 var mongoose = require("mongoose"),
-    crypto   = require("crypto");
+    crypto   = require("crypto"),
+    config   = require("../config/config");
 
 var AccessTokenSchema = new mongoose.Schema({
         user : {
@@ -20,7 +21,6 @@ var AccessTokenSchema = new mongoose.Schema({
         }
     });
 
-// middleware - overwrite token
 AccessTokenSchema.pre("save", function (next) {
     this.value = crypto.randomBytes(32).toString("base64");
     next();

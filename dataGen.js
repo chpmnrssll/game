@@ -87,10 +87,3 @@ RefreshTokenModel.remove({}, function (err) {
 setTimeout(function () {
     mongoose.disconnect();
 }, 3000);
-/*
-{
-    "id": "54508cd30cf72048110cb202",
-    "version": "Backbone v1",
-    "secret": "xN+xIKpcKXEykRX+NCw/hHEEJSgqDEsDeDb+cOu3SF8="
-}
-*/

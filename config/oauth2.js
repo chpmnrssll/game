@@ -7,7 +7,7 @@ var oauth2orize       = require("oauth2orize"),
     RefreshTokenModel = require("../models/refreshToken"),
     server            = oauth2orize.createServer();
 
-// Removes old access/refresh tokens and generates a new ones
+// Removes old access/refresh tokens and generates a new ones (callback hell!!!)
 var generateTokens = function (user, client, done) {
     AccessTokenModel.remove({
         user : user.id,
@@ -16,36 +16,32 @@ var generateTokens = function (user, client, done) {
         if (err) {
             return done(err);
         }
-    });
-
-    RefreshTokenModel.remove({
-        user : user.id,
-        client : client.id
-    }, function (err) {
-        if (err) {
-            return done(err);
-        }
-    });
-
-    new AccessTokenModel({
-        user : user.id,
-        client : client.id
-    }).save(function (err, accessToken) {
-        if (err) {
-            return done(err);
-        }
-    });
-
-    new RefreshTokenModel({
-        user : user.id,
-        client : client.id
-    }).save(function (err, refreshToken) {
-        if (err) {
-            return done(err);
-        }
-        
-        return done(null, accessToken.value, refreshToken.value, {
-            expires_in : config.security.tokenLife
+        new AccessTokenModel({
+            user : user.id,
+            client : client.id
+        }).save(function (err, accessToken) {
+            if (err) {
+                return done(err);
+            }
+            RefreshTokenModel.remove({
+                user : user.id,
+                client : client.id
+            }, function (err) {
+                if (err) {
+                    return done(err);
+                }
+                new RefreshTokenModel({
+                    user : user.id,
+                    client : client.id
+                }).save(function (err, refreshToken) {
+                    if (err) {
+                        return done(err);
+                    }
+                    return done(null, accessToken.value, refreshToken.value, {
+                        expires_in : config.security.tokenLife
+                    });
+                });
+            });
         });
     });
 }
@@ -68,17 +64,16 @@ server.exchange(oauth2orize.exchange.password(function (client, username, passwo
 // Exchange refreshToken for access token.
 server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken, scope, done) {
         RefreshTokenModel.findOne({
-            token : refreshToken,
+            value : refreshToken,
             client : client.id
-        }, function (err, token) {
+        }, function (err, refreshToken) {
             if (err) {
                 return done(err);
             }
-            if (!token) {
+            if (!refreshToken) {
                 return done(null, false);
             }
-
-            UserModel.findById(token.user, function (err, user) {
+            UserModel.findById(refreshToken.user, function (err, user) {
                 if (err) {
                     return done(err);
                 }
@@ -90,12 +85,7 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
         });
     }));
 
-// token endpoint
-//
-// `token` middleware handles client requests to exchange authorization grants
-// for access tokens.  Based on the grant type being exchanged, the above
-// exchange middleware will be invoked to handle the request.  Clients must
-// authenticate when making requests to this endpoint.
+// token middleware handles client requests to exchange user credentials for access/refresh tokens.
 exports.token = [
     passport.authenticate(["clientBasic", "clientPassword"], {
         session : false
