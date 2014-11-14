@@ -7,7 +7,7 @@ module.exports = {
         name : "game"
     },
     security : {
-        tokenLife : 3600
+        tokenLife : 36      // (seconds)
     },
     server : {
         port : process.env.PORT || 80

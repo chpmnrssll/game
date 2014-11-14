@@ -2,6 +2,12 @@ var mongoose = require("mongoose"),
     crypto   = require("crypto");
 
 var UserSchema = new mongoose.Schema({
+        email : {
+            lowercase : true,
+            required : true,
+            type : String,
+            unique : true
+        },
         name : {
             lowercase : true,
             required : true,

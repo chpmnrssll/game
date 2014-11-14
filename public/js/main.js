@@ -9,17 +9,17 @@ require.config({
     },
     shim : {
         "backbone" : {
-            deps : [ "jquery", "underscore" ],
+            deps : ["jquery", "underscore"],
             exports : "Backbone"
         },
         "bootstrap" : {
-            deps : [ "jquery" ]
+            deps : ["jquery"]
         },
         "jquery" : {
             exports : "$"
         },
         "marionette" : {
-            deps : [ "jquery", "underscore", "backbone" ],
+            deps : ["jquery", "underscore", "backbone"],
             exports : "Marionette"
         },
         "underscore" : {
@@ -29,43 +29,28 @@ require.config({
 });
 
 require(
-    [ "backbone", "bootstrap", "jquery", "marionette", "underscore"],
+    ["backbone", "bootstrap", "jquery", "marionette", "underscore"],
     function (Backbone, Bootstrap, $, Marionette, _) {
-        "use strict";
-        
-        window.App = new Marionette.Application();
-        window.App.addInitializer(function (options) {
-            require([ "routers/mainMenu" ], function (mainMenuRouter) {
-                window.App.apiUrl = "http://localhost/";
-                
-                window.App.routers = {
-                    mainMenu : new mainMenuRouter()
-                };
-                
-                window.App.addRegions({
-                    content : "#content"
-                });
-                
-                if (Backbone.history) {
-                    Backbone.history.start();
-                }
-            });
-        });
-        
-        /*
-        require(["collections/pages"], function (PagesCollection) {
-            window.App.collections = {
-                pages : new PagesCollection()
+    "use strict";
+
+    window.App = new Marionette.Application();
+    window.App.addInitializer(function (options) {
+        require(["routers/mainMenu", "models/session"], function (mainMenuRouter, sessionModel) {
+            window.App.apiUrl = "http://localhost/";
+            window.App.session = new sessionModel();
+            window.App.routers = {
+                mainMenu : new mainMenuRouter()
             };
 
-            _.each(window.App.collections, function (collection, key, list) {
-                collection.fetch();
+            window.App.addRegions({
+                content : "#content"
             });
 
             if (Backbone.history) {
                 Backbone.history.start();
             }
         });
-        */
+    });
+
     window.App.start();
 });

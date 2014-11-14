@@ -2,25 +2,23 @@ var router    = require("express").Router(),
     passport  = require("passport"),
     UserModel = require("../models/user");
 
-// register
+// create (register)
 router.post("/", function (req, res, next) {
-    var username = req.body["username"],
-        password = req.body["password"];
-
     UserModel.findOne({
-        name : username
+        name : req.body.username
     }, function (err, user) {
         if (err) {
             return done(err);
         }
         if (user) {
-            return res.status(422).json({
+            return res.status(401).json({
                 message : "Username already taken."
-            }); //401?
+            });
         }
         new UserModel({
-            name : username,
-            password : password
+            email : req.body.email,
+            name : req.body.username,
+            password : req.body.password
         }).save(function (err, user) {
             if (err) {
                 return console.log(err);
@@ -30,9 +28,9 @@ router.post("/", function (req, res, next) {
     });
 });
 
-// get one
-//router.get("/:id", passport.authenticate("accessToken", { session : false }),
-router.get("/:id", function (req, res, next) {
+// read (one)
+router.get("/:id", passport.authenticate("accessToken", { session : false }), function (req, res, next) {
+//router.get("/:id", function (req, res, next) {
     UserModel.findById(req.params.id, function (err, user) {
         if (err) {
             return next(err);
@@ -46,9 +44,9 @@ router.get("/:id", function (req, res, next) {
     });
 });
 
-// get all
-//router.get("/", passport.authenticate("accessToken", { session : false }),
-router.get("/", function (req, res, next) {
+// read (all)
+router.get("/", passport.authenticate("accessToken", { session : false }), function (req, res, next) {
+//router.get("/", function (req, res, next) {
     UserModel.find({}, function (err, users) {
         if (err) {
             return next(err);
@@ -62,10 +60,9 @@ router.get("/", function (req, res, next) {
     });
 });
 
-// update
-//router.put("/:id", passport.authenticate("accessToken", { session : false }),
-router.put("/:id", function (req, res, next) {
-    UserModel.findByIdAndUpdate(req.params.id, { name: req.body.name }, function (err, user) {
+// update (one)
+router.put("/:id", passport.authenticate("accessToken", { session : false }), function (req, res, next) {
+    UserModel.findById(req.params.id, function (err, user) {
         if (err) {
             return next(err);
         }
@@ -74,13 +71,18 @@ router.put("/:id", function (req, res, next) {
                 message : "Unknown user"
             });
         }
-        //return res.status(200).json(user);
-        return res.status(200).json({ message : "User updated." });
+        
+        user.name = req.body.name;
+        //user.password = req.body.password;
+        user.save(function (err) {
+            return res.status(200).json({ message : "User updated." });
+        });
     });
 });
 
-//router.delete("/:id", passport.authenticate("accessToken", { session : false }),
-router.delete("/:id", function (req, res, next) {
+// delete (one)
+router.delete("/:id", passport.authenticate("accessToken", { session : false }), function (req, res, next) {
+//router.delete("/:id", function (req, res, next) {
     UserModel.findByIdAndRemove(req.params.id, function (err, user) {
         if (err) {
             return next(err);
