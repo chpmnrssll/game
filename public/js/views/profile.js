@@ -1,10 +1,10 @@
-define(["text!templates/register.html"], function (Template) {
+define(["text!templates/profile.html", "models/user"], function (Template, userModel) {
     "use strict";
 
     return Backbone.Marionette.CompositeView.extend({
         template : _.template(Template),
         ui : {
-            formRegister : "#formRegister",
+            formProfile : "#formProfile",
             groupUsername : "#groupUsername",
             groupPassword : "#groupPassword",
             groupPasswordCheck : "#groupPasswordCheck",
@@ -19,18 +19,34 @@ define(["text!templates/register.html"], function (Template) {
             alertEmail : "#alertEmail",
             alertError : "#alertError"
         },
+        model : new userModel({ id : window.App.session.get("userId") }),
+        onRender : function () {
+            var self = this;
+            
+            this.model.fetch({
+                headers : {
+                    "Authorization" : window.App.session.get("tokenType") + " " + window.App.session.get("accessToken")
+                },
+                success : function (model, response, options) {
+                    self.ui.inputUsername.val(model.get("name"));
+                    self.ui.inputEmail.val(model.get("email"));
+                }
+            });
+            this.ui.inputUsername.val(this.model.get("name"));
+            this.ui.inputEmail.val(this.model.get("email"));
+        },
         events : {
-            "click #btnRegister" : function (e) {
+            "click #btnUpdate" : function (e) {
                 e.preventDefault();
                 var self = this;
                 var data = {
-                    username : self.ui.inputUsername.val(),
+                    name : self.ui.inputUsername.val(),
                     password : self.ui.inputPassword.val(),
                     passwordCheck : self.ui.inputPasswordCheck.val(),
                     email : self.ui.inputEmail.val()
                 }
 
-                if (data.username.length === 0) {
+                if (data.name.length === 0) {
                     self.ui.groupUsername.addClass("has-error");
                     self.ui.alertUsername.removeClass("hidden");
                     self.ui.inputUsername.focus();
@@ -38,16 +54,6 @@ define(["text!templates/register.html"], function (Template) {
                 } else {
                     self.ui.groupUsername.removeClass("has-error");
                     self.ui.alertUsername.addClass("hidden");
-                }
-
-                if (data.password.length === 0) {
-                    self.ui.groupPassword.addClass("has-error");
-                    self.ui.alertPassword.removeClass("hidden");
-                    self.ui.inputPassword.focus();
-                    return false;
-                } else {
-                    self.ui.groupPassword.removeClass("has-error");
-                    self.ui.alertPassword.addClass("hidden");
                 }
 
                 if (data.password !== data.passwordCheck) {
@@ -61,6 +67,9 @@ define(["text!templates/register.html"], function (Template) {
                     self.ui.alertPasswordCheck.addClass("hidden");
                     self.ui.groupPassword.removeClass("has-error");
                     delete data.passwordCheck;
+                    if (data.password.length === 0) {
+                        delete data.password;
+                    }
                 }
 
                 if (data.email.length === 0) {
@@ -73,22 +82,25 @@ define(["text!templates/register.html"], function (Template) {
                     self.ui.alertEmail.addClass("hidden");
                 }
 
-                self.ui.formRegister.removeClass("has-error");
+                self.ui.formProfile.removeClass("has-error");
                 self.ui.alertError.addClass("hidden");
                 $.ajax({
-                    type : "POST",
-                    url : window.App.apiUrl + "users/",
+                    type : "PUT",
+                    url : window.App.apiUrl + "users/" + window.App.session.get("userId"),
+                    headers : {
+                        "Authorization" : window.App.session.get("tokenType") + " " + window.App.session.get("accessToken")
+                    },
                     data : data,
                     success : function (data, status, req) {
-                        self.ui.formRegister.removeClass("has-error");
-                        window.App.routers.mainMenu.navigate("login", {
+                        self.ui.formProfile.removeClass("has-error");
+                        window.App.routers.mainMenu.navigate("mainMenu", {
                             trigger : true
                         });
                     },
                     error : function (req, status, error) {
                         self.ui.groupUsername.addClass("has-error");
                         self.ui.inputUsername.focus();
-                        self.ui.formRegister.addClass("has-error");
+                        self.ui.formProfile.addClass("has-error");
                         self.ui.alertError.removeClass("hidden");
                     }
                 });

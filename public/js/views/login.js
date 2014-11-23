@@ -48,6 +48,9 @@ define(["text!templates/login.html"], function (Template) {
                 window.App.session.set(data);
                 window.App.session.getAccessToken({
                     success : function () {
+                        window.App.session.set({
+                            loggedIn : true
+                        });
                         window.App.routers.mainMenu.navigate("mainMenu", {
                             trigger : true
                         });

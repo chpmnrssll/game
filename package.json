@@ -1,21 +1,26 @@
 {
-  "name": "game",
-  "version": "0.0.1",
-  "description": "game test app",
-  "main": "server.js",
-  "private": true,
-  "dependencies": {
-    "body-parser": "^1.9.0",
-    "compression": "^1.1.1",
-    "express": "^4.9.5",
-    "method-override": "^2.2.0",
-    "mongoose": "^3.8.17",
-    "morgan": "^1.3.2",
-    "oauth2orize": "^1.0.1",
-    "passport": "^0.2.1",
-    "passport-http": "^0.2.2",
-    "passport-http-bearer": "^1.0.1",
-    "passport-oauth2-client-password": "^0.1.2",
-    "serve-favicon": "^2.1.5"
-  }
+    "name" : "game",
+    "version" : "0.0.1",
+    "description" : "game test app",
+    "main" : "server.js",
+    "private" : true,
+    "dependencies" : {
+        "body-parser" : "^1.9.0",
+        "compression" : "^1.1.1",
+        "express" : "^4.9.5",
+        "method-override" : "^2.2.0",
+        "mongoose" : "^3.8.17",
+        "morgan" : "^1.3.2",
+        "oauth2orize" : "^1.0.1",
+        "passport" : "^0.2.1",
+        "passport-http" : "^0.2.2",
+        "passport-http-bearer" : "^1.0.1",
+        "passport-oauth2-client-password" : "^0.1.2",
+        "serve-favicon" : "^2.1.5"
+    },
+    "devDependencies" : {
+        "grunt" : "^0.4.5",
+        "grunt-contrib-jshint" : "^0.10.0",
+        "grunt-contrib-watch" : "^0.6.1"
+    }
 }

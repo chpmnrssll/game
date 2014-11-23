@@ -7,7 +7,7 @@ router.get("/client/:version", function (req, res, next) {
         version : req.params.version
     }, function (err, client) {
         if (err) {
-            return done(err);
+            return next(err);
         }
         if (client) {
             return res.status(200).json({

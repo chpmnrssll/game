@@ -2,15 +2,15 @@
 	<div class="col-sm-offset-4 col-sm-4">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h2 class="panel-title">Register</h2>
+				<h2 class="panel-title">User Profile</h2>
 			</div>
 			<div class="panel-body">
-				<form class="form-horizontal col-sm-offset-1 col-sm-10" id="formRegister">
+				<form class="form-horizontal col-sm-offset-1 col-sm-10" id="formProfile">
 					<div class="form-group" id="groupUsername">
 						<input type="text" class="form-control" name="username" id="inputUsername" placeholder="Username" autofocus />
 					</div>
 					<div class="form-group" id="groupPassword">
-						<input type="password" class="form-control" name="password" id="inputPassword" placeholder="Password" />
+						<input type="password" class="form-control" name="password" id="inputPassword" placeholder="Enter new password" />
 					</div>
 					<div class="form-group" id="groupPasswordCheck">
 						<input type="password" class="form-control" name="passwordCheck" id="inputPasswordCheck" placeholder="Enter password again" />
@@ -20,13 +20,12 @@
 					</div>
 					<div class="form-group">
 						<div class="alert alert-danger hidden" id="alertUsername">Username required.</div>
-						<div class="alert alert-danger hidden" id="alertPassword">Password required.</div>
 						<div class="alert alert-danger hidden" id="alertPasswordCheck">Passwords must match.</div>
 						<div class="alert alert-danger hidden" id="alertEmail">Email required.</div>
 						<div class="alert alert-danger hidden" id="alertError">Username already in use.</div>
 					</div>
 					<div class="form-group">
-						<button type="submit" class="btn btn-default" id="btnRegister">Register</button>
+						<button type="submit" class="btn btn-default" id="btnUpdate">Update</button>
 						<a href="#mainMenu" class="btn btn-default pull-right">Main Menu</a>
 					</div>
 				</form>

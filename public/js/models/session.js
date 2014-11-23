@@ -38,7 +38,8 @@ define([], function () {
                         accessToken : data.access_token,
                         refreshToken : data.refresh_token,
                         expiresIn : data.expires_in,
-                        created : Date.now()
+                        created : Date.now(),
+                        userId : data.user_id
                     });
                     if (options.success) {
                         options.success();
@@ -69,7 +70,8 @@ define([], function () {
                         accessToken : data.access_token,
                         refreshToken : data.refresh_token,
                         expiresIn : data.expires_in,
-                        created : Date.now()
+                        created : Date.now(),
+                        userId : data.user_id
                     });
                     if (options.success) {
                         options.success();

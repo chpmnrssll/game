@@ -2,6 +2,10 @@ define([], function () {
     "use strict";
 
     return Backbone.Model.extend({
+        defaults: {
+            current: "",
+            keyboard: {}
+        },
         initialize: function() {
             var that = this;
             window.addEventListener("keydown", function(event) {
@@ -16,10 +20,6 @@ define([], function () {
                 delete _pressed[event.keyCode];
                 that.set("keyboard", _pressed);
             }, false);
-        },
-        defaults: {
-            current: "",
-            keyboard: {}
         }
     });
 });

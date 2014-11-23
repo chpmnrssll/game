@@ -35,11 +35,12 @@ require(
 
     window.App = new Marionette.Application();
     window.App.addInitializer(function (options) {
-        require(["routers/mainMenu", "models/session"], function (mainMenuRouter, sessionModel) {
+        require(["routers/mainMenu", "routers/admin", "models/session"], function (mainMenuRouter, adminRouter, sessionModel) {
             window.App.apiUrl = "http://localhost/";
             window.App.session = new sessionModel();
             window.App.routers = {
-                mainMenu : new mainMenuRouter()
+                mainMenu : new mainMenuRouter(),.
+                admin : new adminRouter()
             };
 
             window.App.addRegions({
